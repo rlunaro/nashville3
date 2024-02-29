@@ -4,9 +4,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>d3js demo</title>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
   </head>
 
   <body>
@@ -19,25 +18,193 @@
       const width = 928;
       const height = 600;
 
+
+      let table = {
+        title : "cmn_tsk_org", 
+        subtitle: "this is a somewhat long text",
+        bl_box: "botton_left", 
+        br_box: "botton_right"
+      }
+
       const svg = d3.select("#canvas")
-        .attr("viewBox", [-width / 2, -height / 2, width, height])
+        .attr("viewBox", [0, 0, 2*width, 2*height])
         .attr("width", width)
         .attr("height", height)
         .attr("style", "max-width: 100%; height: auto; font: 12px sans-serif;");
 
-      // Dibujar línea
-      svg.append("line")
-        .attr("x1", 100)
-        .attr("y1", 100)
-        .attr("x2", 200)
-        .attr("y2", 200)
-        .attr("stroke", "black")
-        .attr("stroke-width", 2);
 
+      function card( svg, x, y, title, body, bottomLeftText, bottomRightText ){
+
+        const pixelsPerChar = 15;
+        let width = 360;
+        let height = 200;
+        let strokeWidth = 2; 
+        let stroke = "black";
+        let fontFamily = "Verdana";
+
+        // creamos un grupo 
+        let group = svg.append( "g" )
+          .attr("x", x)
+          .attr("y", y);
+
+        // outer box
+        let outerBox = group.append("rect")
+          .attr("x", x)
+          .attr("y", y)
+          .attr("width", width)
+          .attr("height", height)
+          .attr("rx", 7)
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth)
+          .attr("fill", "none");
+        
+        // title 
+        let fontSizeTitle = 30;
+        let titleNode = group.append("text")
+          .attr("y", y + 35)
+          .attr("font-family", fontFamily)
+          .attr("font-size", fontSizeTitle)
+          .text(title);
+
+        // center the title
+        let titleTextLength = titleNode.node().getComputedTextLength();
+        titleNode.attr("x", x + ((width - titleTextLength)/2) );
+
+        // line 
+        group.append("line")
+          .attr("x1", x )
+          .attr("y1", y + 50)
+          .attr("x2", x + width)
+          .attr("y2", y + 50)
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth);
+
+        // body 
+        let fontSizeBody = 25;
+        let bodyNode = group.append("text")
+          .attr("y", y + 120)
+          .attr("font-family", fontFamily)
+          .attr("font-size", fontSizeBody)
+          .text(body);
+
+        // center the body
+        let bodyTextLength = bodyNode.node().getComputedTextLength();
+        bodyNode.attr("x", x + ((width - bodyTextLength)/2) );
+
+        leftBottomText( group, 
+                x, 
+                y + height, 
+                stroke,
+                strokeWidth,
+                fontFamily, 
+                fontSizeBody,
+                bottomLeftText );
+        
+        rightBottomText( group, 
+                x + width, 
+                y + height, 
+                stroke,
+                strokeWidth,
+                fontFamily, 
+                fontSizeBody,
+                bottomRightText );
+
+      }
+
+
+      function leftBottomText( group, x, y, stroke, strokeWidth, fontFamily, fontSize, text ) {
+
+        if( !text )
+          return;
+
+        let textSpacing = 15; 
+        // text
+        let leftBottomText = group.append("text")
+          .attr("x", x + textSpacing )
+          .attr("y", y - 10)
+          .attr("font-family", fontFamily)
+          .attr("font-size", fontSize)
+          .text(text);
+
+        let leftBottomTextWidth = leftBottomText.node().getComputedTextLength();
+
+        // square
+        group.append("line")
+          .attr("x1", x)
+          .attr("y1", y  - 40)
+          .attr("x2", x + leftBottomTextWidth + (textSpacing*2) )
+          .attr("y2", y - 40)
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth);
+        group.append("line")
+          .attr("x1", x + leftBottomTextWidth + (textSpacing*2))
+          .attr("y1", y - 40)
+          .attr("x2", x + leftBottomTextWidth + (textSpacing*2))
+          .attr("y2", y )
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth);
+      }
+
+      function rightBottomText( group, x, y, stroke, strokeWidth, fontFamily, fontSize, text ) {
+
+        if( !text )
+          return;
+
+        let textSpacing = 15;
+
+        // text
+        let rightBottomText = group.append("text")
+          .attr("y", y - 10)
+          .attr("font-family", fontFamily)
+          .attr("font-size", fontSize)
+          .text(text);
+
+        let rightBottomTextWidth = rightBottomText.node().getComputedTextLength();
+        rightBottomText.attr("x", x - rightBottomTextWidth - textSpacing );
+
+
+        // right botton square
+        group.append("line")
+          .attr("x1", x)
+          .attr("y1", y  - 40)
+          .attr("x2", x - rightBottomTextWidth - (textSpacing*2) )
+          .attr("y2", y - 40)
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth);
+        group.append("line")
+          .attr("x1", x - rightBottomTextWidth - (textSpacing*2))
+          .attr("y1", y - 40)
+          .attr("x2", x - rightBottomTextWidth - (textSpacing*2))
+          .attr("y2", y )
+          .attr("stroke", stroke)
+          .attr("stroke-width", strokeWidth);
+      }
+
+      card( svg, 
+            20, 
+            20, 
+            "cmn_tsk_job_wkt", 
+            "Task larga",
+            "", 
+            "peta2" );
+
+      card( svg, 
+            300, 
+            300, 
+            "2cmn_tsk_job_wkt", 
+            "2Task larga",
+            "" );
+
+      /*.bezierCurveTo(310, 300, 550, 600, 600, 600)*/
+      let path = d3.path(); 
+      path.moveTo(300,300)
+      .lineTo(400,400)
+      .attr( "stroke", "black" )
+      .attr( "stroke-width", 2 );
+      
     </script>
 
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="main.js"></script>
 
   </body>
 
