@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/rlunaro/nashville3/issues"
   },
-  "homepage": "https://github.com/rlunaro/nashville3#readme"
+  "homepage": "https://github.com/rlunaro/nashville3#readme",
+  "dependencies": {
+    "mxgraph": "^4.2.2"
+  }
 }
